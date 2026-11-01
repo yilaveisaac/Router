@@ -6,7 +6,7 @@
 
   <div class="max-w-xl mx-auto text-center mb-8">
     <h1 class="font-serif text-4xl text-ink">Where to?</h1>
-    <p class="text-ink/60 mt-2">We'll start from where you are — just tell us the destination.</p>
+    <p class="text-ink/60 mt-2">We'll start from where you are. Just tell us the destination.</p>
   </div>
 
   <div class="bg-white rounded-2xl border border-ink/10 shadow-sm p-6 max-w-xl mx-auto">
@@ -50,6 +50,8 @@
         <span class="text-sm text-ink/70" id="route-from-to"></span>
         <button type="button" id="follow-btn" class="shrink-0 rounded-lg border border-ink/20 px-3 py-1.5 text-sm font-medium text-ink hover:bg-ink/5 transition">Follow me</button>
       </div>
+      <p id="route-matched" class="px-6 pb-3 text-xs text-ink/50 -mt-2"></p>
+      <div id="route-warning" class="hidden mx-6 mb-4 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800"></div>
 
       <div class="grid grid-cols-2 sm:grid-cols-4 divide-x divide-ink/10 border-t border-ink/10">
         <div class="px-4 py-5 text-center">
@@ -62,11 +64,33 @@
         </div>
         <div class="px-4 py-5 text-center">
           <p class="text-sm text-ink/50">Fuel needed</p>
-          <p id="stat-gallons" class="font-serif text-xl tabular-nums mt-1"></p>
+          <p id="stat-fuel" class="font-serif text-xl tabular-nums mt-1">-</p>
         </div>
         <div class="px-4 py-5 text-center">
           <p class="text-sm text-ink/50">Est. fuel cost</p>
-          <p id="stat-cost" class="font-serif text-xl tabular-nums mt-1"></p>
+          <p id="stat-cost" class="font-serif text-xl tabular-nums mt-1">-</p>
+        </div>
+      </div>
+
+      <div class="border-t border-ink/10 px-6 py-5">
+        <p class="text-sm font-medium text-ink">Settings</p>
+        <p class="text-xs text-ink/50 mt-0.5">Duration assumes free-flowing traffic. Fuel is estimated from the numbers you enter, and these settings stay in this browser only.</p>
+        <div class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <label class="text-sm text-ink/70">Distance unit
+            <select id="unit-select" class="mt-1 w-full rounded-lg border border-ink/20 px-2 py-2 text-ink">
+              <option value="km">Kilometres (km)</option>
+              <option value="mi">Miles (mi)</option>
+            </select>
+          </label>
+          <label class="text-sm text-ink/70">Fuel use (litres per 100 km)
+            <input type="number" id="fuel-consumption" min="0" step="0.1" inputmode="decimal" placeholder="e.g. 9" class="mt-1 w-full rounded-lg border border-ink/20 px-2 py-2 text-ink">
+          </label>
+          <label class="text-sm text-ink/70">Fuel price per litre
+            <input type="number" id="fuel-price" min="0" step="0.01" inputmode="decimal" placeholder="today's price" class="mt-1 w-full rounded-lg border border-ink/20 px-2 py-2 text-ink">
+          </label>
+          <label class="text-sm text-ink/70">Currency symbol
+            <input type="text" id="fuel-currency" maxlength="4" placeholder="optional" class="mt-1 w-full rounded-lg border border-ink/20 px-2 py-2 text-ink">
+          </label>
         </div>
       </div>
     </div>
@@ -77,8 +101,46 @@
 
 {% block scripts %}
 <script>
+// ---- units (pure helpers) ----
+const M_PER_KM = 1000;
+const M_PER_MILE = 1609.344; // exact international mile
+
+function convertDistance(metres, unit) {
+  return unit === 'mi' ? metres / M_PER_MILE : metres / M_PER_KM;
+}
+
+function formatDistance(metres, unit) {
+  const v = convertDistance(metres, unit);
+  return `${v.toFixed(v < 10 ? 2 : 1)} ${unit}`;
+}
+
+function formatDuration(seconds) {
+  const totalMin = Math.round(seconds / 60);
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return h > 0 ? `${h} h ${String(m).padStart(2, '0')} min` : `${m} min`;
+}
+
+// Fuel is always metric: litres and litres per 100 km.
+function fuelEstimate(distanceMetres, litresPer100km, pricePerLitre) {
+  const litres = (distanceMetres / M_PER_KM) * litresPer100km / 100;
+  return { litres, cost: litres * pricePerLitre };
+}
+
+function defaultUnit() {
+  // Miles where road distances are conventionally shown in miles; km elsewhere.
+  try {
+    const region = new Intl.Locale(navigator.language).region;
+    return ['US', 'GB', 'LR', 'MM'].includes(region) ? 'mi' : 'km';
+  } catch (_) {
+    return 'km';
+  }
+}
+// ---- end units ----
+
 let userCoords = null;
 let map, routeLine, startMarker, endMarker;
+let lastRoute = null;
 
 const statusText = document.getElementById('location-status-text');
 const statusDot = document.querySelector('.status-dot');
@@ -88,6 +150,11 @@ const submitLabel = document.getElementById('submit-label');
 const form = document.getElementById('route-form');
 const formError = document.getElementById('form-error');
 const results = document.getElementById('results');
+
+const unitSelect = document.getElementById('unit-select');
+const fuelConsumption = document.getElementById('fuel-consumption');
+const fuelPrice = document.getElementById('fuel-price');
+const fuelCurrency = document.getElementById('fuel-currency');
 
 function getCookie(name) {
   const match = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
@@ -100,8 +167,49 @@ function setStatus(text, colorClass) {
   statusPing.className = `status-ping animate-ping absolute inline-flex h-full w-full rounded-full ${colorClass} opacity-75`;
 }
 
-// CHANGED: watch the user's location continuously instead of reading it once.
-// The first fix enables the form; later fixes move the live dot on the map.
+// ---- saved settings (stay in this browser only) ----
+function loadSetting(key) {
+  try { return localStorage.getItem(key); } catch (_) { return null; }
+}
+function saveSetting(key, value) {
+  try { localStorage.setItem(key, value); } catch (_) { /* storage unavailable */ }
+}
+
+unitSelect.value = loadSetting('gr_unit') || defaultUnit();
+fuelConsumption.value = loadSetting('gr_fuel_consumption') || '';
+fuelPrice.value = loadSetting('gr_fuel_price') || '';
+fuelCurrency.value = loadSetting('gr_fuel_currency') || '';
+
+unitSelect.addEventListener('change', () => { saveSetting('gr_unit', unitSelect.value); renderStats(); });
+[['gr_fuel_consumption', fuelConsumption], ['gr_fuel_price', fuelPrice], ['gr_fuel_currency', fuelCurrency]]
+  .forEach(([key, el]) => el.addEventListener('input', () => { saveSetting(key, el.value); renderStats(); }));
+
+function renderStats() {
+  if (!lastRoute) return;
+  const unit = unitSelect.value;
+  document.getElementById('stat-distance').textContent = formatDistance(lastRoute.distance_m, unit);
+  document.getElementById('stat-duration').textContent = formatDuration(lastRoute.duration_s);
+
+  const per100 = parseFloat(fuelConsumption.value);
+  const price = parseFloat(fuelPrice.value);
+  const fuelEl = document.getElementById('stat-fuel');
+  const costEl = document.getElementById('stat-cost');
+
+  if (per100 > 0) {
+    const est = fuelEstimate(lastRoute.distance_m, per100, price > 0 ? price : 0);
+    fuelEl.textContent = `${est.litres.toFixed(1)} L`;
+    costEl.textContent = price > 0
+      ? `${fuelCurrency.value.trim()}${Math.round(est.cost).toLocaleString()}`
+      : 'Enter price';
+  } else {
+    fuelEl.textContent = 'Enter use';
+    costEl.textContent = '-';
+  }
+}
+
+// ---- live location ----
+// Watch the user's location continuously. The first fix enables the form;
+// later fixes move the live dot on the map.
 let watchId = null, liveMarker = null, accuracyCircle = null;
 let following = false, firstFix = true, wakeLock = null;
 
@@ -122,7 +230,6 @@ function onPosition(pos) {
 }
 
 function onPositionError() {
-  // Only surface the error if we never got a first fix
   if (firstFix) {
     setStatus('Could not access your location. Allow location access and reload the page.', 'bg-red-500');
   }
@@ -166,7 +273,6 @@ function setFollowing(on) {
 document.getElementById('follow-btn').addEventListener('click', async () => {
   setFollowing(!following);
   if (following && userCoords) map.panTo([userCoords.lat, userCoords.lng]);
-  // Keep the screen awake while following (where supported)
   try {
     if (following && 'wakeLock' in navigator) {
       wakeLock = await navigator.wakeLock.request('screen');
@@ -177,10 +283,17 @@ document.getElementById('follow-btn').addEventListener('click', async () => {
   } catch (_) { /* non-critical */ }
 });
 
-// NEW: show the detected place name as soon as the location is found
+// Show the detected place name as soon as the location is found
 async function showDetectedLocation(coords) {
   try {
-    const res = await fetch(`/api/locate/?lat=${coords.lat}&lng=${coords.lng}`);
+    const res = await fetch('/api/locate/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': getCookie('csrftoken'),
+      },
+      body: JSON.stringify({ lat: coords.lat, lng: coords.lng }),
+    });
     const data = await res.json();
     if (res.ok && data.label) {
       statusText.textContent = `Starting from ${data.label}`;
@@ -190,6 +303,7 @@ async function showDetectedLocation(coords) {
   }
 }
 
+// ---- route request ----
 form.addEventListener('submit', async (e) => {
   e.preventDefault();
   formError.classList.add('hidden');
@@ -229,6 +343,7 @@ form.addEventListener('submit', async (e) => {
 });
 
 function renderRoute(data) {
+  lastRoute = data;
   results.classList.remove('hidden');
 
   if (!map) {
@@ -249,12 +364,19 @@ function renderRoute(data) {
   map.fitBounds(routeLine.getBounds(), { padding: [30, 30] });
   updateLiveMarker();
 
-  document.getElementById('stat-distance').textContent = `${data.distance_miles} mi`;
-  document.getElementById('stat-duration').textContent = `${data.duration_minutes} min`;
-  document.getElementById('stat-gallons').textContent = `${data.gallons} gal`;
-  document.getElementById('stat-cost').textContent = `$${data.total_cost}`;
   document.getElementById('route-from-to').textContent = `${data.origin_label} to ${data.destination_label}`;
+  document.getElementById('route-matched').textContent =
+    data.destination_matched ? `Destination matched to: ${data.destination_matched}` : '';
 
+  const warn = document.getElementById('route-warning');
+  if (data.warnings && data.warnings.length) {
+    warn.textContent = data.warnings.join(' ');
+    warn.classList.remove('hidden');
+  } else {
+    warn.classList.add('hidden');
+  }
+
+  renderStats();
   results.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 </script>

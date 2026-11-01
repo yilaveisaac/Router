@@ -1,10 +1,10 @@
 import json
 import logging
 
-from django.http import JsonResponse
+from django.http import Http404, JsonResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_protect
-from django.views.decorators.http import require_GET, require_POST
+from django.views.decorators.http import require_POST
 
 from API.route_plotter import get_route, reverse_geocode
 
@@ -53,14 +53,59 @@ def get_route_api(request):
     return JsonResponse(data)
 
 
-@require_GET
+@require_POST
+@csrf_protect
 def locate_api(request):
-    # NEW: turns the browser's GPS coordinates into a readable place name
+    # CHANGED: POST + JSON body (was GET with ?lat=&lng=) so precise coordinates
+    # are not written into web-server access logs as part of the URL.
     try:
+        payload = json.loads(request.body)
         # Rounded so nearby fixes share a cache entry in reverse_geocode
-        lat = round(float(request.GET["lat"]), 4)
-        lng = round(float(request.GET["lng"]), 4)
-    except (KeyError, ValueError):
+        lat = round(float(payload["lat"]), 4)
+        lng = round(float(payload["lng"]), 4)
+    except (KeyError, ValueError, TypeError, json.JSONDecodeError):
         return JsonResponse({"error": "Provide lat and lng."}, status=400)
 
     return JsonResponse({"label": reverse_geocode(lat, lng)})
+
+
+# NEW: guide pages. The slug is also the template file name in templates/guides/.
+GUIDES = [
+    {
+        "slug": "how-distance-and-travel-time-are-calculated",
+        "title": "How distance and travel time are calculated, and why they differ from Google Maps",
+        "summary": "What happens between typing a destination and seeing a route, and how far to trust the numbers.",
+    },
+    {
+        "slug": "estimate-fuel-cost-for-a-road-trip",
+        "title": "How to estimate fuel cost for a road trip",
+        "summary": "A simple formula, a worked example and the extras that push costs up.",
+    },
+    {
+        "slug": "distances-between-nigerian-cities",
+        "title": "Distances and driving times between major Nigerian cities",
+        "summary": "Road distances and free-flow driving times for popular intercity routes.",
+    },
+    {
+        "slug": "location-not-detected-fix",
+        "title": "Location not detected? How to allow location access in your browser",
+        "summary": "Fix permission and device settings, and learn how live location works.",
+    },
+    {
+        "slug": "road-trip-planning-checklist",
+        "title": "A road trip planning checklist for long drives",
+        "summary": "What to check, carry and plan before you set off.",
+    },
+]
+
+
+def guides_index(request):
+    return render(request, "guides/index.html", {"guides": GUIDES})
+
+
+def guide_detail(request, slug):
+    guide = next((g for g in GUIDES if g["slug"] == slug), None)
+    if guide is None:
+        raise Http404("Guide not found")
+    others = [g for g in GUIDES if g["slug"] != slug]
+    return render(request, f"guides/{slug}.html", {"guide": guide, "guides": others})

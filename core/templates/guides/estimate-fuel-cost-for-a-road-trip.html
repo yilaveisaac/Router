@@ -1,0 +1,64 @@
+{% extends "guides/article_base.html" %}
+{% block article %}
+<p>Fuel is usually the biggest cost of a road trip, and it is easy to estimate once you know the distance. This guide shows the method, with a worked example you can repeat for any route.</p>
+
+<h2>The formula</h2>
+<ol>
+  <li><strong>Litres used</strong> = distance in km &times; fuel consumption (litres per 100 km) &divide; 100</li>
+  <li><strong>Fuel cost</strong> = litres used &times; price per litre</li>
+</ol>
+<p>Get the distance from Geo Router. Get your consumption from your vehicle, and the price from the pump on the day you buy fuel, because it changes.</p>
+
+<h2>Step 1: find your car's consumption</h2>
+<p>The best number is your own. Fill the tank, reset the trip meter, drive normally, then refill. Divide the litres you added by the kilometres driven and multiply by 100. That gives litres per 100 km for your real driving.</p>
+<p>If you don't know yet, these rough ranges for petrol vehicles in mixed driving can help you start:</p>
+<table>
+  <thead><tr><th>Vehicle type</th><th>Typical litres per 100 km</th></tr></thead>
+  <tbody>
+    <tr><td>Small hatchback or compact car</td><td>6 to 8</td></tr>
+    <tr><td>Saloon car</td><td>8 to 11</td></tr>
+    <tr><td>SUV or crossover</td><td>10 to 14</td></tr>
+    <tr><td>Minibus or large van</td><td>12 to 16</td></tr>
+  </tbody>
+</table>
+<p>These are approximations. Age, engine size, tyre pressure and how you drive all change the real figure, so replace them with your own as soon as you can.</p>
+
+<h2>Step 2: worked example</h2>
+<p>Say a one-way trip is 120 km and your saloon uses 9 litres per 100 km.</p>
+<ul>
+  <li>One way: 120 &times; 9 &divide; 100 = <strong>10.8 litres</strong></li>
+  <li>Return trip: 10.8 &times; 2 = <strong>21.6 litres</strong></li>
+  <li>Cost, if petrol were &#8358;900 per litre (an illustration only, use today's pump price): 21.6 &times; 900 = <strong>&#8358;19,440</strong></li>
+</ul>
+
+<h2>Step 3: add a safety margin</h2>
+<p>The formula assumes steady driving. Real trips use more fuel when you:</p>
+<ul>
+  <li>sit in slow, stop-start traffic</li>
+  <li>run the air conditioning</li>
+  <li>carry a heavy load or many passengers</li>
+  <li>drive with under-inflated tyres</li>
+  <li>take detours to find fuel or a stop</li>
+</ul>
+<p>As a rule of thumb, add 10 to 20 per cent to your estimate for a city trip, and a little less for a smooth highway run.</p>
+
+<h2>Costs the formula leaves out</h2>
+<ul>
+  <li>tolls, where the road has them</li>
+  <li>parking</li>
+  <li>wear on tyres, brakes and servicing</li>
+  <li>food and rest stops on a long journey</li>
+</ul>
+
+<h2>Let Geo Router do the sum</h2>
+<p>Under the map, enter your vehicle's litres per 100 km and today's price per litre. Geo Router then shows the litres needed and the estimated cost for that route. We do not look up fuel prices for you. Pump prices differ between stations and regions and change often, so the estimate is only as good as the numbers you enter. Your entries stay in your own browser and are not sent to us.</p>
+
+<h2>Ways to spend less on fuel</h2>
+<ul>
+  <li>Keep tyres at the pressure in your owner's manual.</li>
+  <li>Travel outside the busiest hours when you can. Free-flowing traffic uses less fuel than crawling.</li>
+  <li>Avoid carrying unnecessary weight.</li>
+  <li>Combine errands into one trip. Plan the order of stops with a route map, so you do not double back.</li>
+</ul>
+<p>To get the distance for your next trip, see <a href="/guides/how-distance-and-travel-time-are-calculated/">how Geo Router calculates distance and time</a>.</p>
+{% endblock %}

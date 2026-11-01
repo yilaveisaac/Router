@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+{% block title %}Privacy Policy{% endblock %}
+
+{% comment %}
+DRAFT - READ BEFORE PUBLISHING
+1. Replace every [[PLACEHOLDER]] below.
+2. Make every statement match what the site really does. In particular check:
+   - how long your server/nginx logs are kept (section 7)
+   - whether you add analytics (Google Analytics etc.) - if so, add it to sections 2, 5 and 6
+   - which routing/geocoding/tile providers you use once you leave the public demo servers (section 5)
+   - where your server is hosted (section 8)
+3. Have a Nigerian lawyer or data protection professional review it, and check whether
+   you must register with the NDPC or appoint a Data Protection Officer.
+4. If you serve visitors in the EEA/UK, AdSense requires a Google-certified consent
+   management platform (CMP) in addition to this policy.
+{% endcomment %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+  <h1 class="font-serif text-4xl">Privacy Policy</h1>
+  <p class="text-sm text-ink/60 mt-2">Last updated: [[DATE]]</p>
+
+  <div class="mt-8 space-y-4 leading-relaxed text-ink/80">
+
+    <h2 class="font-serif text-2xl text-ink pt-4">1. Who we are</h2>
+    <p>
+      Geo Router ("we", "us") is operated by [[OPERATOR NAME / REGISTERED BUSINESS NAME]], based in
+      [[CITY, STATE, NIGERIA]]. Our website is [[https://yourdomain.com]]. For privacy questions, contact us at
+      [[privacy@yourdomain.com]].
+    </p>
+    <p>
+      This policy explains what personal data we collect when you use Geo Router, why, who else receives it, and the
+      choices you have. We handle personal data in line with the Nigeria Data Protection Act 2023 (NDPA).
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">2. What we collect</h2>
+    <ul class="list-disc pl-6 space-y-2">
+      <li>
+        <strong class="text-ink">Your device location.</strong> If you allow it in your browser, we read your precise
+        location. While the page is open, your browser keeps updating it so we can show your position on the map.
+        We do not read your location unless you grant permission, and you can revoke it at any time in your browser settings.
+      </li>
+      <li>
+        <strong class="text-ink">The destination you type.</strong> This is the place name you enter to get a route.
+      </li>
+      <li>
+        <strong class="text-ink">Technical data.</strong> Like most websites, our servers record your IP address,
+        browser and device type, the pages or API paths requested, and timestamps.
+      </li>
+      <li>
+        <strong class="text-ink">Cookies and similar technologies.</strong> We set a security cookie (CSRF) that protects
+        forms and requests on this site. We also save your settings (distance unit, fuel use, fuel price and currency
+        symbol) in your browser's local storage so you don't have to re-enter them. These stay on your device and are
+        not sent to us. Advertising partners may set their own cookies (see section 6).
+      </li>
+      <li>
+        <strong class="text-ink">Messages you send us.</strong> If you email us, we keep your email address and message
+        so we can reply.
+      </li>
+    </ul>
+    <p>
+      We do not ask you to create an account, and we do not knowingly collect sensitive personal data.
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">3. How we use it, and our legal basis</h2>
+    <ul class="list-disc pl-6 space-y-2">
+      <li>
+        <strong class="text-ink">Calculating your route and showing your position</strong>, using your location and
+        destination. Basis: your consent (the browser location prompt).
+      </li>
+      <li>
+        <strong class="text-ink">Showing the name of the place you are in.</strong> Your coordinates are converted into a
+        place name. Basis: your consent.
+      </li>
+      <li>
+        <strong class="text-ink">Keeping the site secure and working</strong>, including preventing abuse and fixing errors,
+        using technical data. Basis: our legitimate interests.
+      </li>
+      <li>
+        <strong class="text-ink">Showing ads</strong> that help keep the service free. Basis: your consent where
+        required, otherwise our legitimate interests.
+      </li>
+      <li>
+        <strong class="text-ink">Replying to your messages.</strong> Basis: our legitimate interests.
+      </li>
+    </ul>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">4. What we do not do with your location</h2>
+    <p>
+      We use your location to answer your request. [[We do not save your location or your searched destinations in a
+      database, link them to an identity, or sell them.]] To speed things up, the server may briefly keep results of
+      recent place lookups in temporary memory. These are rounded or generic lookups and are cleared when the server
+      restarts. Location data is sent to our server in the body of a secure request, not in the page address, so it is
+      not written into our access logs. [[Confirm this matches your final setup.]]
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">5. Who else receives data</h2>
+    <p>To provide the service, some data goes to other organisations:</p>
+    <ul class="list-disc pl-6 space-y-2">
+      <li>
+        <strong class="text-ink">Geocoding (place search).</strong> The destination you type, and your coordinates when we
+        look up your place name, are sent from our server to [[OpenStreetMap Nominatim / your geocoding provider]].
+      </li>
+      <li>
+        <strong class="text-ink">Routing.</strong> The start and end coordinates are sent to [[our own routing server /
+        OSRM public service]] to calculate the route.
+      </li>
+      <li>
+        <strong class="text-ink">Map tiles.</strong> Your browser loads map images directly from [[OpenStreetMap tile
+        servers / your tile provider]], which means that provider sees your IP address and the map area you view.
+      </li>
+      <li>
+        <strong class="text-ink">Content delivery and fonts.</strong> Your browser loads code libraries and fonts from
+        third-party hosts ([[unpkg.com, cdn.tailwindcss.com, Google Fonts]]). These hosts see your IP address.
+      </li>
+      <li>
+        <strong class="text-ink">Advertising.</strong> Google AdSense, described below.
+      </li>
+      <li>
+        <strong class="text-ink">Hosting.</strong> Our website is hosted by [[HOSTING PROVIDER]].
+      </li>
+    </ul>
+    <p>
+      We do not sell personal data. Map data comes from OpenStreetMap contributors (© OpenStreetMap contributors,
+      licensed under the ODbL).
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">6. Advertising and cookies</h2>
+    <p>
+      We use Google AdSense to show ads. Third-party vendors, including Google, use cookies to serve ads based on a
+      user's previous visits to this and other websites. Google's use of advertising cookies enables it and its
+      partners to serve ads to you based on your visit to this site and other sites on the internet.
+    </p>
+    <p>
+      You can opt out of personalised advertising by visiting
+      <a class="underline text-brass" href="https://adssettings.google.com" rel="noopener" target="_blank">Google Ads Settings</a>,
+      or learn more at
+      <a class="underline text-brass" href="https://www.aboutads.info" rel="noopener" target="_blank">aboutads.info</a>.
+      You can also learn how Google uses information from sites that use its services at
+      <a class="underline text-brass" href="https://policies.google.com/technologies/partner-sites" rel="noopener" target="_blank">policies.google.com/technologies/partner-sites</a>.
+    </p>
+    <p>
+      Where required (for example, for visitors in the European Economic Area and the United Kingdom), we ask for
+      your consent before ad cookies are used. You can disable cookies in your browser, but some parts of the site
+      may not work correctly.
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">7. How long we keep data</h2>
+    <ul class="list-disc pl-6 space-y-2">
+      <li>Your location and destination: not stored after your request is answered [[confirm]].</li>
+      <li>Server logs (IP address, timestamps, paths): [[30]] days, then deleted.</li>
+      <li>Emails you send us: as long as needed to deal with your enquiry, then [[12]] months.</li>
+    </ul>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">8. International transfers</h2>
+    <p>
+      Some of the providers above, including Google and content delivery networks, process data outside Nigeria.
+      Our servers are located in [[COUNTRY/REGION]]. Where personal data leaves Nigeria, we rely on providers that
+      apply appropriate safeguards, as the NDPA requires.
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">9. Your rights</h2>
+    <p>Under the NDPA you have the right to:</p>
+    <ul class="list-disc pl-6 space-y-1">
+      <li>be informed about how your data is used (this policy);</li>
+      <li>ask whether we hold data about you and get a copy;</li>
+      <li>have inaccurate data corrected or data erased;</li>
+      <li>restrict or object to certain processing, including processing for marketing;</li>
+      <li>receive your data in a portable format, where applicable;</li>
+      <li>withdraw consent at any time, without affecting earlier processing.</li>
+    </ul>
+    <p>
+      To use these rights, email [[privacy@yourdomain.com]]. You can stop location sharing at any time through your
+      browser's site settings. You also have the right to complain to the Nigeria Data Protection Commission (NDPC)
+      if you believe your data has been mishandled.
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">10. Security</h2>
+    <p>
+      We use HTTPS to encrypt data between your browser and our site and limit access to our servers. No system is
+      completely secure. If a breach affects your personal data, we will notify the NDPC and affected people as the
+      law requires.
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">11. Children</h2>
+    <p>
+      Geo Router is not directed at children under 18, and we do not knowingly collect their personal data. If you
+      believe a child has given us personal data, contact us and we will delete it.
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">12. Changes to this policy</h2>
+    <p>
+      We may update this policy. When we do, we will change the "Last updated" date above. If changes are significant,
+      we will tell you on the site.
+    </p>
+
+    <h2 class="font-serif text-2xl text-ink pt-4">13. Contact</h2>
+    <p>
+      [[OPERATOR NAME]] &middot; [[ADDRESS]] &middot; [[privacy@yourdomain.com]]
+    </p>
+  </div>
+</div>
+{% endblock %}

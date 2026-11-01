@@ -1,0 +1,52 @@
+{% extends "guides/article_base.html" %}
+{% block article %}
+<p>When you type a destination into Geo Router, three things happen before a route appears on your map. Knowing what they are helps you decide how far to trust the numbers.</p>
+
+<h2>1. Your destination becomes coordinates</h2>
+<p>Routing software works with points on the earth, not names. So the place you type is first sent to a geocoder, which searches OpenStreetMap's place database and returns its best match as a latitude and longitude. Your starting point is your device's location.</p>
+<p>This is where most surprises come from. If you type "Airport" or "Central Market", many places share that name, and the geocoder returns only one of them. Be specific: add the area and the city, for example "Murtala Muhammed Airport, Ikeja, Lagos". If the route ends somewhere unexpected on the map, the destination was probably matched to the wrong place.</p>
+
+<h2>2. A routing engine finds the fastest road path</h2>
+<p>The route itself is calculated by OSRM, an open-source routing engine. It works on the road network recorded in OpenStreetMap: every road, junction, one-way street and turn restriction that contributors have mapped. Each road is given an assumed driving speed based on its type, such as an expressway, a main road or a residential street. The engine then searches for the path with the lowest total travel time.</p>
+<p>What comes back is a list of thousands of coordinates along the real roads. That is the line you see on the map, which is why it bends with the road instead of running straight from A to B.</p>
+
+<h2>3. Distance and time are totals along that path</h2>
+<ul>
+  <li><strong>Distance</strong> is the sum of the lengths of the road segments on the route. It is always longer than the straight-line distance, sometimes by a lot where roads wind or must go around lagoons, rivers or estates.</li>
+  <li><strong>Duration</strong> is the sum of the time to drive each segment at its assumed speed.</li>
+</ul>
+
+<h2>What the travel time does not include</h2>
+<p>The duration is a free-flow estimate. It does not know about:</p>
+<ul>
+  <li>live traffic or the time of day you travel</li>
+  <li>road condition, flooding, roadworks or diversions</li>
+  <li>queues at junctions, tolls or checkpoints</li>
+  <li>stops for fuel, food or rest</li>
+  <li>weather</li>
+</ul>
+<p>In a congested city, the real journey can take much longer than the figure shown. Treat it as a best case.</p>
+
+<h2>Why Google Maps may show a different answer</h2>
+<ul>
+  <li>Google uses live and historical traffic. Geo Router does not.</li>
+  <li>The two use different map data. In some areas one is more complete than the other.</li>
+  <li>They may pick different routes, or assume different speeds on the same road.</li>
+  <li>The destination may be resolved to a slightly different point, such as a gate versus the centre of a compound.</li>
+</ul>
+<p>For the same route, distances are usually close. Times are where the two differ most.</p>
+
+<h2>How to use the numbers</h2>
+<ul>
+  <li>Use the <strong>distance</strong> for planning fuel and costs. It is the more reliable figure. See <a href="/guides/estimate-fuel-cost-for-a-road-trip/">how to estimate fuel cost for a road trip</a>.</li>
+  <li>Use the <strong>time</strong> as a minimum, and add a buffer for busy roads. A good habit is to compare with a trip you already know at the same time of day, then judge the gap.</li>
+  <li>Always glance at the <strong>route on the map</strong>. If it looks wrong, rephrase the destination with more detail.</li>
+</ul>
+
+<h2>Spot a mistake in the map?</h2>
+<p>OpenStreetMap is edited by volunteers, and local knowledge is what improves it. If a road is missing or mislabelled where you live, you can fix it for everyone at <a href="https://www.openstreetmap.org" rel="noopener" target="_blank">openstreetmap.org</a>. Better data there means better routes here.</p>
+
+<div class="note">
+  <strong>Data sources.</strong> Map data &copy; OpenStreetMap contributors, available under the Open Database Licence. Routes are calculated with OSRM.
+</div>
+{% endblock %}

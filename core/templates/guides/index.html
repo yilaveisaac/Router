@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Guides{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-12">
+  <h1 class="font-serif text-4xl">Guides</h1>
+  <p class="text-ink/60 mt-2">Practical help for planning routes, estimating trip costs and getting the most out of Geo Router.</p>
+
+  <div class="mt-8 space-y-4">
+    {% for g in guides %}
+    <a href="/guides/{{ g.slug }}/" class="block bg-white rounded-2xl border border-ink/10 p-6 hover:border-brass transition">
+      <h2 class="font-serif text-2xl text-ink">{{ g.title }}</h2>
+      <p class="text-ink/70 mt-1">{{ g.summary }}</p>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "guides/article_base.html" %}
+{% block article %}
+<p>Geo Router uses your device's location as the starting point, so it needs your permission. If the page says it can't find your location, the cause is almost always a permission or a device setting. Work through the steps below.</p>
+
+<h2>Check these first</h2>
+<ul>
+  <li><strong>Did you tap "Block" on the prompt?</strong> Browsers remember the choice. You need to change it in the site settings (steps below).</li>
+  <li><strong>Is location turned on for the device?</strong> On a phone, the main location switch in Settings must be on.</li>
+  <li><strong>Is the page secure?</strong> Browsers only share location with sites that use HTTPS. Look for the padlock in the address bar.</li>
+</ul>
+
+<h2>Allow location in your browser</h2>
+<p>Menu names change a little between versions, but the path is similar.</p>
+<ul>
+  <li><strong>Chrome on a computer:</strong> click the icon at the left of the address bar, open Site settings, find Location and choose Allow, then reload the page.</li>
+  <li><strong>Chrome on Android:</strong> tap the icon next to the address, open Permissions, and set Location to Allow. Then check that the phone's own Location switch is on in Settings.</li>
+  <li><strong>Safari on iPhone:</strong> open Settings, then Privacy and Security, then Location Services. Make sure it is on, then open Safari Websites and choose While Using the App. You can also tap the page settings icon in Safari's address bar and open Website Settings.</li>
+  <li><strong>Safari on Mac:</strong> open Safari Settings, go to Websites, choose Location, and set this site to Allow.</li>
+  <li><strong>Firefox:</strong> click the padlock in the address bar, open Permissions, and clear any blocked Location setting. Reload and allow when asked.</li>
+</ul>
+
+<h2>If it still can't find you</h2>
+<ul>
+  <li><strong>Move to an open area.</strong> GPS is weakest indoors. Near a window or outside, accuracy improves quickly.</li>
+  <li><strong>Turn on precise location.</strong> Android and iPhone let you share only an approximate location with an app. Choose Precise for your browser.</li>
+  <li><strong>Turn on Wi-Fi and mobile data.</strong> Phones use nearby networks as well as satellites to work out where you are.</li>
+  <li><strong>Restart the browser</strong> or close other tabs, then reload.</li>
+  <li><strong>Check battery saver.</strong> Some modes limit location updates.</li>
+</ul>
+
+<h2>How live location works on Geo Router</h2>
+<p>After you request a route, the map shows a dot for your position, with a faint circle showing how accurate the reading is. As you move, the dot follows. Tap <strong>Follow me</strong> to keep the map centred on you. Dragging the map turns following off.</p>
+<p>A few things to know:</p>
+<ul>
+  <li>Live tracking uses more battery, so close the tab when you are finished.</li>
+  <li>If you lock your phone or switch apps, the browser may pause location updates. Keep the screen on while you rely on it.</li>
+  <li>The accuracy circle is normal. A larger circle means a weaker signal.</li>
+</ul>
+
+<h2>Stopping location sharing</h2>
+<p>You can turn off location for this site at any time in your browser's site settings, and closing the tab stops live tracking. To see how we handle your location, read our <a href="/privacy/">Privacy Policy</a>.</p>
+{% endblock %}

@@ -8,11 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
   <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <!-- CHANGED: Bootstrap/jQuery/Popper/SweetAlert dropped in favor of Tailwind + vanilla JS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -37,8 +33,8 @@
     }
   </script>
 
-  <link rel="stylesheet" href="https://unpkg.com/[email protected]/dist/leaflet.css" />
-  <script src="https://unpkg.com/[email protected]/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   {% block extra_head %}{% endblock %}
 </head>
@@ -50,11 +46,24 @@
       <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/>
       <path d="M15.5 8.5L13 13l-4.5 2.5L11 11l4.5-2.5z" fill="currentColor"/>
     </svg>
-    <span class="font-serif text-lg tracking-tight">Geo Router</span>
+    <a href="/" class="font-serif text-lg tracking-tight">Geo Router</a>
+    <a href="/guides/" class="ml-auto text-sm text-ink/70 hover:text-ink">Guides</a>
   </div>
 </nav>
 
 {% block content %}{% endblock %}
+
+<footer class="border-t border-ink/10 mt-16">
+  <div class="max-w-5xl mx-auto px-4 py-8 text-sm text-ink/60 space-y-3">
+    <nav class="flex flex-wrap gap-x-6 gap-y-2">
+      <a href="/" class="hover:text-ink">Home</a>
+      <a href="/guides/" class="hover:text-ink">Guides</a>
+      <a href="/privacy/" class="hover:text-ink">Privacy Policy</a>
+      {# Add About, Contact and Terms links here once those pages exist #}
+    </nav>
+    <p>Map data &copy; <a href="https://www.openstreetmap.org/copyright" rel="noopener" target="_blank" class="underline">OpenStreetMap contributors</a>. Routes calculated with OSRM.</p>
+  </div>
+</footer>
 
 <!-- CHANGED: Django messages rendered as a plain toast; SweetAlert dependency removed -->
 {% if messages %}
